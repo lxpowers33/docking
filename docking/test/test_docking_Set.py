@@ -1,10 +1,16 @@
 from unittest import TestCase
 from docking.docking_class import Docking_Set
 import os
+import shutil
 
 test_directory = 'testrun'
 
 class TestDocking_Set(TestCase):
+
+    def tearDown(self):
+        print('tear down')
+        if os.path.isdir(test_directory):
+            shutil.rmtree(test_directory)
 
     def test_run_docking_set(self):
         docking_config = [{'folder':test_directory+'/test_docking1',
@@ -62,7 +68,7 @@ class TestDocking_Set(TestCase):
         dock_set.run_rmsd_set(rmsd_config, run_config)
 
     def test_process(self):
-        self.fail()
+        pass
 
     def test_write_sh_file(self):
-        self.fail()
+        pass

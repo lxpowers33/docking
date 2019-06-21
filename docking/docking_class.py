@@ -78,12 +78,14 @@ class Docking_Set:
         docking_groups = docking.utilities.grouper(run_config['group_size'], all_docking)
         #make the folder if it doesn't exist
         os.makedirs(run_config['run_folder'], exist_ok=True)
+        top_wd = os.getcwd() #get current working directory
         os.chdir(run_config['run_folder'])
         for i, docks_group in enumerate(docking_groups):
             file_name = '{}_{}'.format(type, i)
             self._write_sh_file(file_name+'.sh', docks_group, run_config, type)
             if not run_config['dry_run']:
                 os.system('sbatch -p {} -t 1:00:00 -o {}.out {}.sh'.format(run_config['partition'], file_name, file_name))
+        os.chdir(top_wd) #change back to original working directory
 
     def _write_sh_file(self, name, docking_list, run_config, type):
         '''
