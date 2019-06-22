@@ -67,4 +67,4 @@ class TestDocking_Set(TestCase):
             else:
                 print("Waiting for rmsd calculation completion ...")
             time.sleep(60)
-        self.fail("Test failed, did not output docking within 15 minutes") 
+        self.fail("Test failed, did not output rmsd within 15 minutes")
