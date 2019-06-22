@@ -59,6 +59,17 @@ class Docking_Set:
             Docking_Run.add_ligand_file(docking_info['ligand_file'])
             all_docking.append(Docking_Run)
         self._process(run_config, all_docking, type='rmsd')
+   
+    def check_rmsd_set_done(self, rmsd_set_info):
+        '''
+        Check whether a set of rmsd  tasks is finished
+        :return: (list of booleans), whether each task in rmsd_set_info is done
+        '''
+        done_list = []
+        for rmsd_info in rmsd_set_info:
+            Docking_Run = Docking(rmsd_info['folder'], rmsd_info['name'])
+            done_list.append(Docking_Run.check_done_rmsd())
+        return done_list
 
     def get_docking_results(self, rmsd_set_info):
         '''
@@ -139,7 +150,7 @@ class Docking:
         return False
 
     def check_done_dock(self):
-        return os.path.isfile(self.pose_viewer_file_name)
+        return os.path.isfile(self.folder+'/'+self.pose_viewer_file_name)
 
     def add_ligand_file(self, ligand_file_name):
         self.ligand_file_name = ligand_file_name
