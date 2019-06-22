@@ -8,7 +8,6 @@ test_directory = 'testrun'
 class TestDocking_Set(TestCase):
 
     def tearDown(self):
-        print('tear down')
         if os.path.isdir(test_directory):
             shutil.rmtree(test_directory)
 
