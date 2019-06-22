@@ -2,6 +2,7 @@ from unittest import TestCase
 from docking.docking_class import Docking_Set
 import os
 import shutil
+import time
 
 test_directory = os.getcwd()+'/testrun'
 test_data_directory = os.path.dirname(os.path.realpath(__file__))+'/test_data'
@@ -29,4 +30,11 @@ class TestDocking_Set(TestCase):
         dock_set = Docking_Set()
         dock_set.run_docking_set(docking_config, run_config)
 
-        #dock_set.check_docking_set_done(docking_config)
+        for i in range(1,15):
+            time.sleep(60)
+            if (all(dock_set.check_docking_set_done(docking_config))):
+                print("Docking Completed")
+                pass
+            else:
+                print("Waiting for docking completion ...")
+        self.fail("Test failed, did not output docking within 15 minutes")
