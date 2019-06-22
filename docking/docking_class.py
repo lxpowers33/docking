@@ -148,7 +148,7 @@ class Docking:
         return self.rmsd_cmd.format(self.rmsd_file_name, self.ligand_file_name, self.pose_viewer_file_name)
 
     def check_done_rmsd(self):
-        return os.path.isfile(self.rmsd_file_name)
+        return os.path.isfile(self.folder+'/'+self.rmsd_file_name)
 
     def get_docking_rmsd_results(self):
         '''
@@ -159,27 +159,18 @@ class Docking:
         :return:
         '''
         all_rmsds = []
-        with open(self.rmsd_file_name) as rmsd_file:
+        rmsd_file_path = self.folder+'/'+self.rmsd_file_name
+        assert self.check_done_rmsd(), "Missing rmsd file: " + rmsd_file_path
+        with open(rmsd_file_path) as rmsd_file:
             for line in list(rmsd_file)[1:]:
                 rmsd = line.split(',')[3].strip('"')
-                all_rmsds.append(rmsd)
+                all_rmsds.append(float(rmsd))
         return all_rmsds
 
     def get_gscores_emodels(self):
-        rept_file = '{}/{}.rept'.format(self.folder, self.rept_file_name)
-        gscores, emodels = [], []
-        with open(rept_file) as fp:
-            for line in fp:
-                line = line.strip().split()
-                if len(line) <= 1 or (line[1] != lig and line[1] != lig + '_out' and line[1] != '1'): continue
-                rank, lig_name, lig_index, score = line[:4]
-                emodel = line[13]
-                if line[1] == '1':
-                    rank, lig_index, score = line[:3]
-                    emodel = line[12]
-                gscores.append(float(score))
-                emodels.append(float(emodel))
-
+        #TODO
+        gscores = []
+        emodels = []
         return gscores, emodels
 
 commands = '''GRIDFILE   {}
