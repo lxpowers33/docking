@@ -44,10 +44,9 @@ class TestDocking_Set(TestCase):
                              'cd {}'.format(test_directory + '/test_docking2'),
                              '$SCHRODINGER/glide -WAIT test_docking2.in',
                              'cd {}'.format(test_directory + '/run')]
-        f = open(sh_file, "r")
-        for i, line in enumerate(f):
-            self.assertEqual(line, correct_lines_sh[i]+'\n')
-        f.close()
+        with open(sh_file, "r") as f:
+            for i, line in enumerate(f):
+                self.assertEqual(line, correct_lines_sh[i]+'\n')
 
     def test_run_rmsd_set(self):
         rmsd_config = [{'folder': test_directory + '/test_docking1',
@@ -69,15 +68,15 @@ class TestDocking_Set(TestCase):
         #check that sh file contains correct lines
         correct_lines_sh = ['#!/bin/bash',
                             'cd {}'.format(test_directory + '/test_docking1'),
-                            '$SCHRODINGER/run -WAIT rmsd.py -use_neutral_scaffold -pv second -c test_docking1_rmsd.csv {} test_docking1_pv.maegz'.format(test_directory + '/testfile.mae'),
+                            '$SCHRODINGER/run rmsd.py -use_neutral_scaffold -pv second -c test_docking1_rmsd.csv {} test_docking1_pv.maegz'.format(test_directory + '/testfile.mae'),
                             'cd {}'.format(test_directory + '/run'),
                             'cd {}'.format(test_directory + '/test_docking2'),
-                            '$SCHRODINGER/run -WAIT rmsd.py -use_neutral_scaffold -pv second -c test_docking2_rmsd.csv {} test_docking2_pv.maegz'.format(test_directory + '/testfile.mae'),
+                            '$SCHRODINGER/run rmsd.py -use_neutral_scaffold -pv second -c test_docking2_rmsd.csv {} test_docking2_pv.maegz'.format(test_directory + '/testfile.mae'),
                             'cd {}'.format(test_directory + '/run')]
-        f = open(sh_file, "r")
-        for i, line in enumerate(f):
-            self.assertEqual(line, correct_lines_sh[i] + '\n')
-        f.close()
+
+        with open(sh_file, "r") as f:
+            for i, line in enumerate(f):
+                self.assertEqual(line, correct_lines_sh[i] + '\n')
 
     def test_run_docking_rmsd_delete_set(self):
         all_config = [{'folder':test_directory+'/test_docking1',
@@ -106,17 +105,16 @@ class TestDocking_Set(TestCase):
         correct_lines_sh = ['#!/bin/bash',
                             'cd {}'.format(test_directory + '/test_docking1'),
                             '$SCHRODINGER/glide -WAIT test_docking1.in',
-                            '$SCHRODINGER/run -WAIT rmsd.py -use_neutral_scaffold -pv second -c test_docking1_rmsd.csv {} test_docking1_pv.maegz'.format(
+                            '$SCHRODINGER/run rmsd.py -use_neutral_scaffold -pv second -c test_docking1_rmsd.csv {} test_docking1_pv.maegz'.format(
                                 test_directory + '/testfile.mae'),
                             'rm test_docking1_pv.maegz',
                             'cd {}'.format(test_directory + '/run'),
                             'cd {}'.format(test_directory + '/test_docking2'),
                             '$SCHRODINGER/glide -WAIT test_docking2.in',
-                            '$SCHRODINGER/run -WAIT rmsd.py -use_neutral_scaffold -pv second -c test_docking2_rmsd.csv {} test_docking2_pv.maegz'.format(
+                            '$SCHRODINGER/run rmsd.py -use_neutral_scaffold -pv second -c test_docking2_rmsd.csv {} test_docking2_pv.maegz'.format(
                                 test_directory + '/testfile.mae'),
                             'rm test_docking2_pv.maegz',
                             'cd {}'.format(test_directory + '/run')]
-        f = open(sh_file, "r")
-        for i, line in enumerate(f):
-            self.assertEqual(line, correct_lines_sh[i] + '\n')
-        f.close()
+        with open(sh_file, "r") as f:
+            for i, line in enumerate(f):
+                self.assertEqual(line, correct_lines_sh[i] + '\n')
