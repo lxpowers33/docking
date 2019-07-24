@@ -1,7 +1,6 @@
 from unittest import TestCase
 from docking.docking_class import Docking_Set
 import os
-import shutil
 import time
 
 test_directory = os.getcwd()+'/testrun'
@@ -32,7 +31,7 @@ class TestDocking_Set(TestCase):
         for i in range(1,15):
             if (all(dock_set.check_docking_set_done(docking_config))):
                 print("Docking Completed")
-                return 
+                return
             else:
                 print("Waiting for docking completion ...")
             time.sleep(60)
@@ -67,4 +66,39 @@ class TestDocking_Set(TestCase):
             else:
                 print("Waiting for rmsd calculation completion ...")
             time.sleep(60)
-        self.fail("Test failed, did not output docking within 15 minutes") 
+        self.fail("Test failed, did not output rmsd within 15 minutes")
+
+    def test_docking_rmsd_delete(self):
+        all_config = [{'folder': test_directory + '/test_docking1',
+                       'name': 'test_docking1',
+                       'grid_file': test_data_directory + '/2B7A.zip',
+                       'prepped_ligand_file': test_data_directory + '/2W1I_lig.mae',
+                       'ligand_file': test_data_directory + '/2W1I_lig_correct.mae',
+                       'glide_settings': {}},
+                      {'folder': test_directory + '/test_docking2',
+                       'name': 'test_docking2',
+                       'grid_file': test_data_directory + '/2B7A.zip',
+                       'prepped_ligand_file': test_data_directory + '/2W1I_lig.mae',
+                       'ligand_file': test_data_directory + '/2W1I_lig_correct.mae',
+                       'glide_settings': {}}
+                      ]
+
+        run_config = {'run_folder': test_directory + '/run',
+                      'group_size': 1,
+                      'partition': 'rondror',
+                      'dry_run': False}
+        dock_set = Docking_Set()
+        dock_set.run_docking_rmsd_delete(all_config, run_config)
+
+        for i in range(1, 15):
+            if all(dock_set.check_rmsd_set_done(all_config)):
+                print("RMSD  Completed")
+                # check that docking is not done
+                if any(dock_set.check_docking_set_done(all_config)):
+                    self.fail('Test failed, pose viewers not deleted')
+                return
+            else:
+                print("Waiting for rmsd calculation completion ...")
+            time.sleep(60)
+
+        self.fail("Test failed, did not output rmsd within 15 minutes")

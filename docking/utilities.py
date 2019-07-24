@@ -4,3 +4,10 @@ def grouper(n, iterable):
     for i in range(0, len(iterable), n):
         out += [iterable[i: i+n]]
     return out
+
+def isfloat(value):
+  try:
+    float(value)
+    return True
+  except ValueError:
+    return False

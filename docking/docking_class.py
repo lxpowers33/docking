@@ -71,6 +71,18 @@ class Docking_Set:
             done_list.append(Docking_Run.check_done_rmsd())
         return done_list
 
+    def run_docking_rmsd_delete(self, all_set_info, run_config):
+        '''
+        Run docking then rmsd, then delete the docking poseviewer file to save space 
+        '''
+        all_docking = []
+        for docking_info in all_set_info:
+            Docking_Run = Docking(docking_info['folder'], docking_info['name'])
+            Docking_Run.add_ligand_file(docking_info['ligand_file'])
+            Docking_Run.write_glide_input_file(docking_info['grid_file'],docking_info['prepped_ligand_file'],docking_info['glide_settings'])
+            all_docking.append(Docking_Run)
+        self._process(run_config, all_docking, type='all')
+
     def get_docking_results(self, rmsd_set_info):
         '''
         Get the rmsds for each list of poses for each ligand
@@ -98,18 +110,24 @@ class Docking_Set:
                 os.system('sbatch -p {} -t 1:00:00 -o {}.out {}.sh'.format(run_config['partition'], file_name, file_name))
         os.chdir(top_wd) #change back to original working directory
 
+    
     def _write_sh_file(self, name, docking_list, run_config, type):
         '''
         Internal method to write a sh file to run a set of commands
         '''
         with open(name, 'w') as f:
-            f.write('#!/bin/bash\nml load chemistry\nml load schrodinger\n')
+            f.write('#!/bin/bash\n')
             for dock in docking_list:
                 f.write('cd {}\n'.format(dock.get_folder()))
                 if type == 'rmsd':
                     f.write(dock.get_rmsd_cmd())
                 if type == 'dock':
                     f.write(dock.get_dock_cmd())
+                if type == 'all':
+                    f.write(dock.get_dock_cmd())
+                    f.write(dock.get_rmsd_cmd())
+                    f.write(dock.delete_pose_file())
+
                 f.write('cd {}\n'.format(run_config['run_folder']))
 
 class Docking:
@@ -152,6 +170,9 @@ class Docking:
     def check_done_dock(self):
         return os.path.isfile(self.folder+'/'+self.pose_viewer_file_name)
 
+    def delete_pose_file(self):
+        return 'rm {}\n'.format(self.pose_viewer_file_name)
+
     def add_ligand_file(self, ligand_file_name):
         self.ligand_file_name = ligand_file_name
 
@@ -179,9 +200,27 @@ class Docking:
         return all_rmsds
 
     def get_gscores_emodels(self):
-        #TODO
-        gscores = []
-        emodels = []
+        rept_file = self.folder+'/'+self.rept_file_name
+        
+        gscores, emodels, rmsds = [], [], []
+        with open(rept_file) as fp:
+            for line in fp:
+                line = line.strip().split()
+                if len(line) < 19: continue
+                rank, lig_name, lig_index, score = line[:4]
+                emodel = line[13]
+
+                if line[1]  == '1':
+                    rank, lig_index, score = line[:3]
+                    emodel = line[12]
+
+                if not (docking.utilities.isfloat(emodel) and
+                        docking.utilities.isfloat(score) and
+                        docking.utilities.isfloat(rank)): continue
+
+                gscores.append(float(score))
+                emodels.append(float(emodel))
+
         return gscores, emodels
 
 commands = '''GRIDFILE   {}

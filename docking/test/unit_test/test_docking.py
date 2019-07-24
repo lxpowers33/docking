@@ -19,3 +19,11 @@ class TestDocking(TestCase):
         self.assertEqual(rmsd_list[0], 8.32327059894)
         self.assertEqual(rmsd_list[1], 1.99483243783)
         self.assertEqual(rmsd_list[222], 8.14962597727)
+
+    def test_get_gscores_emodels(self):
+        test_docking = Docking(dir_path+'/test_data', '2B7A_lig-to-2B7A')
+        gscores, emodels = test_docking.get_gscores_emodels()
+        self.assertEqual(gscores[0], -10.33)
+        self.assertEqual(gscores[1], -10.13)
+        self.assertEqual(emodels[0], -77.3)
+        self.assertEqual(emodels[1], -76.6)
