@@ -149,7 +149,7 @@ class Docking:
         self.rept_file_name = '{}.rept'.format(docking_name)
         self.rmsd_file_name = '{}_rmsd.csv'.format(docking_name)
         self.dock_cmd = '$SCHRODINGER/glide -WAIT {}\n'.format(self.glide_input_file_name)
-        self.rmsd_cmd = '$SCHRODINGER/run -WAIT rmsd.py -use_neutral_scaffold -pv second -c {} {} {}\n'
+        self.rmsd_cmd = '$SCHRODINGER/run rmsd.py -use_neutral_scaffold -pv second -c {} {} {}\n'
 
     def write_glide_input_file(self, grid_file, prepped_file, glide_settings):
         #check glide settings
@@ -200,33 +200,28 @@ class Docking:
         return all_rmsds
 
     def get_gscores_emodels(self):
-        lig, prot = pair.split('_to_')
-        rept_file = '{}/{}/{}.rept'.format(self.folder, pair, pair)
-        rmsd_file = '{}/{}/{}_rmsd.csv'.format(self.folder, pair, pair)
+        rept_file = self.folder+'/'+self.rept_file_name
         
         gscores, emodels, rmsds = [], [], []
         with open(rept_file) as fp:
             for line in fp:
                 line = line.strip().split()
-                if len(line) <= 1 or (line[1] != lig and line[1] != lig + '_lig' and line[1] != '1'): continue
+                if len(line) < 19: continue
                 rank, lig_name, lig_index, score = line[:4]
                 emodel = line[13]
+
                 if line[1]  == '1':
                     rank, lig_index, score = line[:3]
                     emodel = line[12]
+
+                if not (docking.utilities.isfloat(emodel) and
+                        docking.utilities.isfloat(score) and
+                        docking.utilities.isfloat(rank)): continue
+
                 gscores.append(float(score))
                 emodels.append(float(emodel))
-        
-        if not os.path.exists(rmsd_file):
-            return gscores, emodels, [None] * len(gscores)
-            
-        with open(rmsd_file) as fp:
-            for line in fp:
-                line = line.strip().split(',')
-                if line[3] == '"RMSD"': continue
-                rmsds.append(float(line[3][1: -1]))
 
-        return gscores, emodels, rmsds
+        return gscores, emodels
 
 commands = '''GRIDFILE   {}
 LIGANDFILE   {}
