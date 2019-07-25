@@ -73,7 +73,8 @@ class Docking_Set:
 
     def run_docking_rmsd_delete(self, all_set_info, run_config, incomplete_only=False):
         '''
-        Run docking then rmsd, then delete the docking poseviewer file to save space 
+        Run docking then rmsd, then delete the docking poseviewer file to save space
+        :param incomplete_only: (Boolean) whether to only run docking/rmsd for processes without rmsd output
         '''
         all_docking = []
         for docking_info in all_set_info:
@@ -89,10 +90,13 @@ class Docking_Set:
         Get the rmsds for each list of poses for each ligand
         :return (list of list of ints)
         '''
-        rmsds = []
+        rmsds = {}
         for docking_info in rmsd_set_info:
             Docking_Run = Docking(docking_info['folder'], docking_info['name'])
-            rmsds.append(Docking_Run.get_docking_rmsd_results())
+            if Docking_Run.check_done_rmsd():
+                rmsds[docking_info['name']] = Docking_Run.get_docking_rmsd_results()
+            else:
+                rmsds[docking_info['name']] = None
         return rmsds
 
     def _process(self, run_config, all_docking, type='dock'):
