@@ -71,16 +71,17 @@ class Docking_Set:
             done_list.append(Docking_Run.check_done_rmsd())
         return done_list
 
-    def run_docking_rmsd_delete(self, all_set_info, run_config):
+    def run_docking_rmsd_delete(self, all_set_info, run_config, incomplete_only=False):
         '''
         Run docking then rmsd, then delete the docking poseviewer file to save space 
         '''
         all_docking = []
         for docking_info in all_set_info:
             Docking_Run = Docking(docking_info['folder'], docking_info['name'])
-            Docking_Run.add_ligand_file(docking_info['ligand_file'])
-            Docking_Run.write_glide_input_file(docking_info['grid_file'],docking_info['prepped_ligand_file'],docking_info['glide_settings'])
-            all_docking.append(Docking_Run)
+            if not (incomplete_only and Docking_Run.check_done_rmsd()):
+                Docking_Run.add_ligand_file(docking_info['ligand_file'])
+                Docking_Run.write_glide_input_file(docking_info['grid_file'],docking_info['prepped_ligand_file'],docking_info['glide_settings'])
+                all_docking.append(Docking_Run)
         self._process(run_config, all_docking, type='all')
 
     def get_docking_results(self, rmsd_set_info):
