@@ -1,5 +1,6 @@
 from unittest import TestCase
 from docking.docking_class import Docking
+from docking.utilities import grouper
 import os 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -27,3 +28,8 @@ class TestDocking(TestCase):
         self.assertEqual(gscores[1], -10.13)
         self.assertEqual(emodels[0], -77.3)
         self.assertEqual(emodels[1], -76.6)
+
+    def test_grouper(self):
+        out = grouper(10, [1,2,3,4,5])
+        self.assertEqual(len(out), 1)
+        self.assertEqual(len(out[0]), 5)
