@@ -1,0 +1,194 @@
+JobId: sh-29-08-0-5d392f80
+
+ExitStatus: finished
+Reference file: /home/users/lxpowers/projects/combind/code_modules/docking/docking/test/functional_test/test_data/2W1I_lig_correct.mae
+Query file: test_docking2_pv.maegz
+ASL: not atom.element H
+In-place RMSD = 8.32; maxd = 11.92 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 1.99; maxd = 6.38 between atoms  22 ( C24) and  24 ( C26); atoms ASL: not atom.element H
+In-place RMSD = 8.55; maxd = 15.03 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.50; maxd = 14.86 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.48; maxd = 14.79 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.75; maxd = 11.82 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 2.22; maxd = 6.09 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.32; maxd = 12.07 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.31; maxd = 12.16 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.58; maxd = 15.07 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.07; maxd = 13.99 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.24; maxd = 14.00 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.83; maxd = 13.21 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.78; maxd = 14.64 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 7.19; maxd = 13.07 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.10; maxd = 13.19 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.48; maxd = 12.23 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.86; maxd = 14.84 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.76; maxd = 13.58 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.78; maxd = 15.17 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.57; maxd = 14.22 between atoms   5 ( C5 ) and   6 ( C6 ); atoms ASL: not atom.element H
+In-place RMSD = 9.07; maxd = 13.16 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.87; maxd = 15.12 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.83; maxd = 13.16 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.89; maxd = 13.04 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.95; maxd = 13.04 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.73; maxd = 13.26 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.79; maxd = 13.47 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.09; maxd = 13.24 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.79; maxd = 11.90 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.44; maxd = 15.03 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.03; maxd = 13.32 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.09; maxd = 12.94 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.67; maxd = 11.55 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.81; maxd = 12.91 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 2.87; maxd = 6.65 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.56; maxd = 13.79 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.10; maxd = 13.50 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.22; maxd = 13.86 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.87; maxd = 13.81 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.77; maxd = 13.16 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.52; maxd = 13.13 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.19; maxd = 13.12 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 7.49; maxd = 13.11 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.09; maxd = 13.53 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.76; maxd = 13.07 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.62; maxd = 13.98 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.17; maxd = 13.65 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.82; maxd = 12.04 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.61; maxd = 13.37 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.89; maxd = 12.68 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.71; maxd = 14.04 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.71; maxd = 13.26 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.26; maxd = 13.90 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.67; maxd = 14.36 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.77; maxd = 12.12 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.04; maxd = 13.15 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.83; maxd = 13.08 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.59; maxd = 12.62 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.76; maxd = 11.14 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.54; maxd = 12.71 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.70; maxd = 13.12 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.71; maxd = 11.22 between atoms   9 ( C9 ) and   9 ( C9 ); atoms ASL: not atom.element H
+In-place RMSD = 8.79; maxd = 13.12 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.38; maxd = 13.47 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.04; maxd = 13.57 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.98; maxd = 12.71 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.02; maxd = 13.78 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.82; maxd = 13.33 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.97; maxd = 13.34 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.92; maxd = 13.68 between atoms  24 ( C26) and  24 ( C26); atoms ASL: not atom.element H
+In-place RMSD = 9.04; maxd = 13.14 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.31; maxd = 12.00 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.20; maxd = 12.79 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.84; maxd = 14.56 between atoms   6 ( C6 ) and   5 ( C5 ); atoms ASL: not atom.element H
+In-place RMSD = 7.94; maxd = 13.71 between atoms  24 ( C26) and  24 ( C26); atoms ASL: not atom.element H
+In-place RMSD = 8.71; maxd = 13.18 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.90; maxd = 13.99 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.45; maxd = 13.12 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.77; maxd = 13.38 between atoms   1 ( O1 ) and   1 ( O1 ); atoms ASL: not atom.element H
+In-place RMSD = 9.53; maxd = 14.36 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.52; maxd = 13.41 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.14; maxd = 13.76 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.83; maxd = 13.19 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.68; maxd = 12.85 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.61; maxd = 14.35 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.85; maxd = 14.93 between atoms   6 ( C6 ) and   5 ( C5 ); atoms ASL: not atom.element H
+In-place RMSD = 7.92; maxd = 13.00 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.98; maxd = 13.15 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.50; maxd = 12.07 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.66; maxd = 13.90 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.87; maxd = 13.37 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.66; maxd = 13.18 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.87; maxd = 13.63 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.74; maxd = 13.07 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.91; maxd = 13.43 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.73; maxd = 12.05 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.67; maxd = 14.27 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.89; maxd = 12.28 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.37; maxd = 13.11 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.85; maxd = 12.92 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.67; maxd = 12.70 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.87; maxd = 12.85 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.31; maxd = 13.76 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.84; maxd = 12.59 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.35; maxd = 14.63 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.69; maxd = 13.11 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.69; maxd = 12.79 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 7.04; maxd = 12.28 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.34; maxd = 13.65 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 7.60; maxd = 13.12 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 6.04; maxd = 9.71 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.11; maxd = 13.45 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.23; maxd = 14.04 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.54; maxd = 11.22 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.82; maxd = 13.57 between atoms  24 ( C26) and  24 ( C26); atoms ASL: not atom.element H
+In-place RMSD = 8.29; maxd = 11.83 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.30; maxd = 11.85 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.25; maxd = 13.35 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.71; maxd = 14.62 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.06; maxd = 15.58 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.98; maxd = 12.81 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.59; maxd = 11.92 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.47; maxd = 14.02 between atoms  24 ( C26) and  24 ( C26); atoms ASL: not atom.element H
+In-place RMSD = 9.59; maxd = 14.68 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 7.46; maxd = 14.31 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.63; maxd = 13.56 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.71; maxd = 14.99 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.16; maxd = 13.42 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.70; maxd = 12.89 between atoms  24 ( C26) and  24 ( C26); atoms ASL: not atom.element H
+In-place RMSD = 7.00; maxd = 12.92 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.64; maxd = 13.76 between atoms   1 ( O1 ) and   1 ( O1 ); atoms ASL: not atom.element H
+In-place RMSD = 9.71; maxd = 13.77 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.51; maxd = 13.17 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.63; maxd = 14.53 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.71; maxd = 13.61 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.44; maxd = 14.71 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.63; maxd = 11.48 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.02; maxd = 12.79 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.83; maxd = 13.13 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.62; maxd = 12.68 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.78; maxd = 13.85 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.01; maxd = 13.30 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.17; maxd = 13.20 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.45; maxd = 12.90 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.85; maxd = 14.36 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.49; maxd = 14.06 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.76; maxd = 12.55 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 7.41; maxd = 12.51 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.89; maxd = 13.15 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.97; maxd = 13.12 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.97; maxd = 12.51 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.92; maxd = 12.24 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.91; maxd = 13.54 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.98; maxd = 13.44 between atoms   1 ( O1 ) and   1 ( O1 ); atoms ASL: not atom.element H
+In-place RMSD = 8.47; maxd = 13.17 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.54; maxd = 13.37 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.50; maxd = 12.97 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.19; maxd = 12.32 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.20; maxd = 13.31 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.19; maxd = 12.25 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.14; maxd = 11.87 between atoms   9 ( C9 ) and   9 ( C9 ); atoms ASL: not atom.element H
+In-place RMSD = 7.45; maxd = 12.78 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.44; maxd = 12.77 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.61; maxd = 12.12 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.83; maxd = 13.65 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.42; maxd = 14.93 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.36; maxd = 12.32 between atoms   9 ( C9 ) and   9 ( C9 ); atoms ASL: not atom.element H
+In-place RMSD = 9.26; maxd = 14.05 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.48; maxd = 12.27 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 8.50; maxd = 13.41 between atoms   1 ( O1 ) and   1 ( O1 ); atoms ASL: not atom.element H
+In-place RMSD = 8.73; maxd = 15.34 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.01; maxd = 13.04 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.29; maxd = 11.85 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.76; maxd = 14.43 between atoms  24 ( C26) and  24 ( C26); atoms ASL: not atom.element H
+In-place RMSD = 8.43; maxd = 14.76 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.70; maxd = 14.56 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 9.28; maxd = 14.04 between atoms   1 ( O1 ) and   1 ( O1 ); atoms ASL: not atom.element H
+In-place RMSD = 9.02; maxd = 13.69 between atoms  23 ( O25) and  23 ( O25); atoms ASL: not atom.element H
+In-place RMSD = 6.83; maxd = 12.23 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.87; maxd = 15.88 between atoms   6 ( C6 ) and   6 ( C6 ); atoms ASL: not atom.element H
+In-place RMSD = 8.91; maxd = 12.96 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 10.09; maxd = 14.81 between atoms   6 ( C6 ) and   6 ( C6 ); atoms ASL: not atom.element H
+In-place RMSD = 8.14; maxd = 13.39 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.57; maxd = 13.51 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 8.45; maxd = 13.36 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H
+In-place RMSD = 9.66; maxd = 14.50 between atoms   5 ( C5 ) and   5 ( C5 ); atoms ASL: not atom.element H
+In-place RMSD = 8.38; maxd = 14.60 between atoms  10 ( N10) and  10 ( N10); atoms ASL: not atom.element H

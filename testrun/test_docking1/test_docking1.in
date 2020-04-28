@@ -1,0 +1,10 @@
+GRIDFILE   /home/users/lxpowers/projects/combind/code_modules/docking/docking/test/functional_test/test_data/2B7A.zip
+LIGANDFILE   /home/users/lxpowers/projects/combind/code_modules/docking/docking/test/functional_test/test_data/2W1I_lig.mae
+DOCKING_METHOD   confgen
+CANONICALIZE   True
+EXPANDED_SAMPLING   False
+POSES_PER_LIG   200
+POSTDOCK_NPOSE   200
+WRITEREPT   True
+PRECISION   SP
+NENHANCED_SAMPLING   4
