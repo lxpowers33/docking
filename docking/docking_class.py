@@ -1,5 +1,7 @@
 import os
 import docking.utilities
+from schrodinger.structure import StructureReader, StructureWriter
+from datetime import datetime, timedelta
 
 class Docking_Set:
     """
@@ -24,28 +26,50 @@ class Docking_Set:
         name: (string) name of docking run to use for files
         ligand_file: (string) absolute path to ligand file
     """
-    def run_docking_set(self, docking_set_info, run_config):
+    def run_docking_set(self, docking_set_info, run_config, incomplete_only=True, log_missing_only=True):
         '''
         Setup and start running a set of docking task
         :return: (None)
         '''
         all_docking = []
+        now = datetime.utcnow()
+
         for docking_info in docking_set_info:
             Docking_Run = Docking(docking_info['folder'], docking_info['name'])
-            Docking_Run.write_glide_input_file(docking_info['grid_file'],docking_info['prepped_ligand_file'],docking_info['glide_settings'])
-            all_docking.append(Docking_Run)
+
+            result = Docking_Run.check_done_dock() and ((now - Docking_Run.dock_date()) < timedelta(2))
+            if not (incomplete_only and result):
+
+                result = Docking_Run.check_dock_log() and ((now - Docking_Run.dock_log_date()) < timedelta(2))
+                if not (log_missing_only and result):
+                    Docking_Run.write_glide_input_file(docking_info['grid_file'],docking_info['prepped_ligand_file'],docking_info['glide_settings'])
+                    all_docking.append(Docking_Run)
         self._process(run_config, all_docking, type='dock')
 
-    def check_docking_set_done(self, docking_set_info):
+    def check_docking_set_done(self, docking_set_info, after_date=False, datedelta=1):
         '''
         Check whether a set of docking tasks is finished
         :return: (list of booleans), whether each task in docking_set_info is done
         '''
         done_list = []
+        log_list = []
+        now = datetime.utcnow()
+
         for docking_info in docking_set_info:
             Docking_Run = Docking(docking_info['folder'], docking_info['name'])
-            done_list.append(Docking_Run.check_done_dock())
-        return done_list
+            if (after_date):
+
+                result = Docking_Run.check_done_dock() and ((now - Docking_Run.dock_date()) < timedelta(datedelta))
+                done_list.append(result)
+
+                result = Docking_Run.check_dock_log() and ((now - Docking_Run.dock_log_date()) < timedelta(datedelta))
+                log_list.append(result)
+
+            else:
+                done_list.append(Docking_Run.check_done_dock())
+                log_list.append(Docking_Run.check_dock_log())
+            
+        return done_list, log_list
 
     def run_rmsd_set(self, rmsd_set_info, run_config):
         '''
@@ -59,7 +83,7 @@ class Docking_Set:
             Docking_Run.add_ligand_file(docking_info['ligand_file'])
             all_docking.append(Docking_Run)
         self._process(run_config, all_docking, type='rmsd')
-   
+
     def check_rmsd_set_done(self, rmsd_set_info):
         '''
         Check whether a set of rmsd  tasks is finished
@@ -85,6 +109,18 @@ class Docking_Set:
                 all_docking.append(Docking_Run)
         self._process(run_config, all_docking, type='all')
 
+    def get_docking_gscores(self, docking_set_info):
+        scores = {}
+        for docking_info in docking_set_info:
+            Docking_Run = Docking(docking_info['folder'], docking_info['name'])
+            if Docking_Run.check_done_dock():
+                gscores, emodels = Docking_Run.get_gscores_emodels()
+                scores[docking_info['name']] = {'gscores':gscores, 'emodels':emodels}
+            else:
+                scores[docking_info['name']] = None
+
+        return scores
+
     def get_docking_results(self, rmsd_set_info):
         '''
         Get the rmsds for each list of poses for each ligand
@@ -97,6 +133,7 @@ class Docking_Set:
                 rmsds[docking_info['name']] = Docking_Run.get_docking_rmsd_results()
             else:
                 rmsds[docking_info['name']] = None
+
         return rmsds
 
     def _process(self, run_config, all_docking, type='dock'):
@@ -110,6 +147,8 @@ class Docking_Set:
         os.chdir(run_config['run_folder'])
         for i, docks_group in enumerate(docking_groups):
             file_name = '{}_{}'.format(type, i)
+            if ('jobname_end' in run_config): 
+                file_name = '{}_{}_{}'.format(type, i, run_config['jobname_end'])
             self._write_sh_file(file_name+'.sh', docks_group, run_config, type)
             if not run_config['dry_run']:
                 os.system('sbatch -p {} -t 1:00:00 -o {}.out {}.sh'.format(run_config['partition'], file_name, file_name))
@@ -151,6 +190,7 @@ class Docking:
         #define all file name conventions here
         self.glide_input_file_name = '{}.in'.format(docking_name)
         self.pose_viewer_file_name = '{}_pv.maegz'.format(docking_name)
+        self.docklog_file_name = '{}.log'.format(docking_name)
         self.rept_file_name = '{}.rept'.format(docking_name)
         self.rmsd_file_name = '{}_rmsd.csv'.format(docking_name)
         self.dock_cmd = '$SCHRODINGER/glide -WAIT {}\n'.format(self.glide_input_file_name)
@@ -160,7 +200,10 @@ class Docking:
         #check glide settings
         #check grid_file and prepped_file exists, otherwise return false + missing file
         with open(self.folder+'/'+self.glide_input_file_name, 'w') as f:
-            f.write(commands.format(grid_file, prepped_file))
+            f.write(commands.format(grid_file, prepped_file, glide_settings['num_poses']))
+            if 'keywords' in glide_settings:
+                for key, value in glide_settings['keywords'].items():
+                    f.write('{} {}\n'.format(key, value))
         return True
 
     def get_folder(self):
@@ -174,6 +217,15 @@ class Docking:
 
     def check_done_dock(self):
         return os.path.isfile(self.folder+'/'+self.pose_viewer_file_name)
+
+    def dock_date(self):
+        return datetime.utcfromtimestamp(os.path.getmtime(self.folder+'/'+self.pose_viewer_file_name))
+
+    def check_dock_log(self):
+        return os.path.isfile(self.folder+'/'+self.docklog_file_name)
+
+    def dock_log_date(self):
+        return datetime.utcfromtimestamp(os.path.getmtime(self.folder+'/'+self.docklog_file_name))
 
     def delete_pose_file(self):
         return 'rm {}\n'.format(self.pose_viewer_file_name)
@@ -228,13 +280,22 @@ class Docking:
 
         return gscores, emodels
 
+    def load_poses(self, maxposes=10):
+        poses = []
+        for i, st in enumerate(StructureReader(self.folder+'/'+self.pose_viewer_file_name)):
+            if i > maxposes: break
+            if i == 0:
+                prot_st = st
+                continue
+            poses.append(st)  
+        return prot_st, poses
+
 commands = '''GRIDFILE   {}
 LIGANDFILE   {}
 DOCKING_METHOD   confgen
 CANONICALIZE   True
-EXPANDED_SAMPLING   False
-POSES_PER_LIG   200
+POSES_PER_LIG   {}
 POSTDOCK_NPOSE   200
 WRITEREPT   True
 PRECISION   SP
-NENHANCED_SAMPLING   4'''
+NENHANCED_SAMPLING   4\n'''

@@ -1,8 +1,23 @@
 import os
 import docking.utilities
+from schrodinger.structure import StructureReader, StructureWriter
+from schrodinger.structutils.transform import get_centroid
 
 class Prep_Protein_Set:
-    def run_prep_wizard_set(self, prep_set_info, run_config):
+
+    def report(self, prep_set_info):
+        print('name', 'merge', 'Wizard', 'align', 'split', 'grid')
+        for single_prep_info in prep_set_info:
+            single_prep = Protein_Prep(single_prep_info['save_folder'], single_prep_info['name'])
+            print(single_prep_info['name'],
+                single_prep.done_merge(),
+                single_prep.done_prepwizard(),  
+                single_prep.done_align(), 
+                single_prep.done_split_prepped(), 
+                single_prep.done_grid(),
+                single_prep_info['save_folder'])
+
+    def run_prep_wizard_set(self, prep_set_info, run_config, incomplete_only=True):
         """
         Prep Step 1:
         Combine protein raw structure with ligand from raw structure
@@ -22,8 +37,13 @@ class Prep_Protein_Set:
         all_preps = []
         for single_prep_info in prep_set_info:
             single_prep = Protein_Prep(single_prep_info['save_folder'], single_prep_info['name'])
-            single_prep.save_merged_ligand_protein(single_prep_info['raw_protein_file'],  single_prep_info['raw_ligand_file'])
-            all_preps.append(single_prep)
+
+            if not (incomplete_only and single_prep.done_merge()):
+                single_prep.save_merged_ligand_protein(single_prep_info['raw_protein_file'],  single_prep_info['raw_ligand_file'])
+            
+            if not (incomplete_only and single_prep.done_prepwizard()):
+                all_preps.append(single_prep)
+                
         self._process(run_config, all_preps, type='step1')
 
     def run_align_set(self,  prep_set_info, run_config):
@@ -45,7 +65,7 @@ class Prep_Protein_Set:
             all_preps.append(single_prep)
         self._process(run_config, all_preps, type='step2')
 
-    def run_split_prepped_set(self, prep_set_info):
+    def run_split_prepped_set(self, prep_set_info, incomplete_only=True):
         """
         Prep Step 3:
         Remove the ligand from the prepared, aligned structure
@@ -58,9 +78,10 @@ class Prep_Protein_Set:
         """
         for single_prep_info in prep_set_info:
             single_prep = Protein_Prep(single_prep_info['save_folder'], single_prep_info['name'])
-            single_prep.save_merged()
+            if not (incomplete_only and single_prep.done_split_prepped()):
+                single_prep.split()
 
-    def run_build_grids(self, prep_set_info, run_config):
+    def run_build_grids(self, prep_set_info, run_config, incomplete_only=True):
         """
         Prep Step 4:
         Write the grid using the final protein structure
@@ -70,7 +91,37 @@ class Prep_Protein_Set:
         :param run_config:
         :return:
         """
-        return False
+        all_preps = []
+        for single_prep_info in prep_set_info:
+            single_prep = Protein_Prep(single_prep_info['save_folder'], single_prep_info['name'])
+            if not (incomplete_only and single_prep.done_grid()):
+                single_prep.write_grid_in_file()
+                all_preps.append(single_prep)
+                
+        self._process(run_config, all_preps, type='step4')
+
+    def ligand_prep_report(self, prep_set_info):
+        
+        missing = []
+        for single_prep_info in prep_set_info:
+            single_prep = Ligand_Prep(single_prep_info['save_folder'], single_prep_info['name'])
+            if (not single_prep.prep_done()):
+                missing.append(single_prep_info['save_folder'])
+
+        print('Missing {}/{}'.format(len(missing), len(prep_set_info)))
+        print(missing)
+
+    def run_prep_ligands(self, prep_set_info, run_config, incomplete_only=True):
+        all_preps = []
+        for single_prep_info in prep_set_info:
+            single_prep = Ligand_Prep(single_prep_info['save_folder'], single_prep_info['name'])
+            if not (incomplete_only and single_prep.prep_done()):
+                single_prep.add_smiles_string(single_prep_info['SMILES'])
+                if (not run_config['dry_run']):
+                    single_prep.write_smiles_file()
+                all_preps.append(single_prep)
+                
+        self._process(run_config, all_preps, type='smi_prep')
 
     def _process(self, run_config, all_docking, type='dock'):
         '''
@@ -100,10 +151,44 @@ class Prep_Protein_Set:
                     f.write(dock.get_prep_wizard_cmd())
                 if type == 'step2':
                     f.write(dock.get_alignment_cmd())
+                if type == 'step4':
+                    f.write(dock.get_grid_cmd())
+                if type == 'smi_prep':
+                    f.write(dock.get_prep_smiles_cmd())
                 f.write('cd {}\n'.format(run_config['run_folder']))
 
 
-from schrodinger.structure import StructureReader, StructureWriter
+class Ligand_Prep: 
+    """
+    Object to Carry out low level preparation steps on a single ligand
+    """
+    def __init__(self, folder, ligand_name):
+        self.folder = folder
+        self.path = folder + '/'
+        self.name = ligand_name
+        os.makedirs(self.folder, exist_ok=True)
+
+        self.smiles_file = self.name + '.smi'
+        self.prepped_file = self.name + '.mae'
+        self.prep_smiles_cmd = '$SCHRODINGER/ligprep -WAIT -epik -ismi {} -omae {} \n'
+
+    def get_folder(self):
+        return self.folder
+
+    def add_smiles_string(self, smiles):
+        self.smiles = smiles
+
+    def write_smiles_file(self):
+        with open(self.path + self.smiles_file, 'w') as f:
+            f.write(self.smiles)
+
+    def get_prep_smiles_cmd(self):
+        return self.prep_smiles_cmd.format(self.smiles_file, self.prepped_file)
+
+    def prep_done(self):
+        #check the mae file exists
+        return os.path.isfile(self.path+self.prepped_file) 
+
 
 class Protein_Prep:
     """
@@ -111,12 +196,13 @@ class Protein_Prep:
     """
     def __init__(self, folder, docking_name):
         self.folder = folder
+        self.path = folder + '/'
         os.makedirs(self.folder, exist_ok=True)
         self.name = docking_name
 
-        self.raw_complex = '{}_raw_complex'.format(self.name)
-        self.prepped_complex = '{}_prepped_complex'.format(self.name)
-        self.prep_wizard_cmd = '$SCHRODINGER/utilities/prepwizard -WAIT -rehtreat -watdist 0 {}.mae {}.mae\n'.format(self.raw_complex, self.prepped_complex)
+        self.raw_complex = '{}_raw_complex.mae'.format(self.name)
+        self.prepped_complex = '{}_prepped_complex.mae'.format(self.name)
+        self.prep_wizard_cmd = '$SCHRODINGER/utilities/prepwizard -WAIT -rehtreat -watdist 0 {} {}\n'.format(self.raw_complex, self.prepped_complex)
 
         self.align_cmd = '$SCHRODINGER/utilities/structalign \
                       -asl        "(not chain. L and not atom.element H) \
@@ -125,9 +211,13 @@ class Protein_Prep:
                                 and (fillres within 15.0 chain. L)" \
                       {} {}.mae\n'
 
-        self.align_file = ''
-        self.split_ligand = 'prepped_aligned_ligand.mae'
-        self.split_protein = 'prepped_aligned_protein.mae'
+        self.align_file = '{}_prepped_aligned_complex.mae'.format(self.name)
+        self.split_ligand = '{}_prepped_aligned_ligand.mae'.format(self.name)
+        self.split_protein = '{}_prepped_aligned_protein.mae'.format(self.name)
+
+        self.grid_in = 'grid.in'
+        self.grid_file = '{}_grid.zip'.format(self.name)
+        self.grid_cmd = '$SCHRODINGER/glide -WAIT {}\n'
 
     def get_folder(self):
         return self.folder
@@ -153,12 +243,18 @@ class Protein_Prep:
 
         merged_st = lig_st.merge(prot_st)
 
-        st_wr = StructureWriter(self.raw_complex)
+        st_wr = StructureWriter(self.path+self.raw_complex)
         st_wr.append(merged_st)
         st_wr.close()
 
+    def done_merge(self):
+        return os.path.isfile(self.path+self.raw_complex) 
+
     def get_prep_wizard_cmd(self):
         return self.prep_wizard_cmd
+
+    def done_prepwizard(self):
+        return os.path.isfile(self.path+self.prepped_complex) 
 
     def add_template_complex(self, filename):
         self.template_complex = filename
@@ -166,14 +262,54 @@ class Protein_Prep:
     def get_alignment_cmd(self):
         return self.align_cmd.format(self.template_complex, self.prepped_complex)
 
-    def save_merged(self):
-        st = next(StructureReader(opt_complex))
-        prot_st = st.extract([a.index for a in st.atom if a.chain != 'L'])
-        prot_st.title = '{}_prot'.format(pdb_id)
+    def done_align(self): 
+        return False
 
-        prot_wr = StructureWriter(self.split_protein)
+    def split(self):
+        #look for the opt_complex, if it doesn't exist, just use the prepped complex 
+        
+        usefile = ''
+        if (os.path.isfile(self.path+self.align_file)):
+            usefile = self.path+self.align_file
+        else:
+            usefile = self.path+self.prepped_complex
+
+        st = next(StructureReader(usefile))
+        prot_st = st.extract([a.index for a in st.atom if a.chain != 'L'])
+        prot_st.title = '{}_prot'.format(self.name)
+
+        lig_st = st.extract([a.index for a in st.atom if a.chain == 'L'])
+        lig_st.title = '{}_lig'.format(self.name)
+
+        prot_wr = StructureWriter(self.path+self.split_protein)
         prot_wr.append(prot_st)
         prot_wr.close()
+
+        lig_wr = StructureWriter(self.path+self.split_ligand)
+        lig_wr.append(lig_st)
+        lig_wr.close()
+
+    def done_split_prepped(self):
+        return os.path.isfile(self.path+self.split_protein) and os.path.isfile(self.folder+'/'+self.split_ligand)
+
+    def write_grid_in_file(self):
+        
+        st_2 = next(StructureReader(self.path+self.split_ligand))
+        c2 = get_centroid(st_2)
+        x,y,z = c2[:3]
+
+        with open(self.path+self.grid_in, 'w') as f:
+            f.write('GRID_CENTER {},{},{}\n'.format(x,y,z))
+            f.write('GRIDFILE {}\n'.format(self.grid_file))
+            f.write('INNERBOX 15,15,15\n')
+            f.write('OUTERBOX 30,30,30\n')
+            f.write('RECEP_FILE {}\n'.format(self.split_protein))
+
+    def get_grid_cmd(self):
+        return self.grid_cmd.format(self.grid_in)
+
+    def done_grid(self): 
+        return os.path.isfile(self.path+self.grid_file)
 
 
 
