@@ -5,6 +5,8 @@ and make parallelizing docking tasks on sherlock easy. This can work as an indep
 for many different projects.
 
 TODO: rewrite job submission to use job arrays
+TODO: write tests for protein and ligand prep steps 
+TODO: bundle prep steps into in a single job
 
 ### Install 
     
@@ -39,7 +41,8 @@ Docking example:
     #import this docking module
     import sys
     sys.path.insert(0, '<path>/docking')
-
+    from docking.docking_class import Docking_Set, Docking
+    
     docking_config = [{'folder':'absolute/path/lig1_to_struc1',
                        'name':'lig1_to_struc1',
                        'grid_file':'absolute/path/gridname_struc1.zip',
@@ -68,3 +71,34 @@ Docking example:
 
 There is also a module for prepping proteins and ligands to use as docking inputs.    
 See tests and comments for further details.
+
+    
+    sys.path.insert(0, '<path>/docking')
+
+    from docking.prep_class import Prep_Protein_Set
+
+    run_config = {'run_folder': 'prep_run',
+        'partition': 'rondror',
+        'group_size': 1,
+        'dry_run':False }
+    
+    for s in ['CLC2_5TQQ_model', 'CLC2_5TR1_model', 'state_C_o', 'state_C_oi', 'state_O', 'state_U']:
+        target_folder = base + '/' + s
+        raw_protein_file = working +'/structures/'+s+'.pdb'
+        raw_ligand_file = working +'/structures/MCFA_5TR1.pdb'
+        prep_set_info.append(
+                {'raw_protein_file': raw_protein_file,
+          'raw_ligand_file': raw_ligand_file,
+          'save_folder': target_folder,
+          'name': s})
+
+    step = sys.argv[1]
+    Prepper = Prep_Protein_Set()
+    if step == '1':
+            Prepper.run_prep_wizard_set(prep_set_info, run_config)
+    if step == '3':
+            Prepper.run_split_prepped_set(prep_set_info)
+    if step == '4':
+            Prepper.run_build_grids(prep_set_info, run_config)
+    if step == 'r':
+            Prepper.report(prep_set_info)
