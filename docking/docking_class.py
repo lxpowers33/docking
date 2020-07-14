@@ -20,36 +20,45 @@ class Docking_Set:
         partition: (string) what partition to run on
         group_size: (int) for parallelizing on sherlock, how many tasks to group together, usually 5-10
         dry_run: (Boolean) whether to submit the files with sbatch or not
+        glide_settings: (dict)
+            glide_settings['num_poses'] (integer) number of poses to write out
+            glide_settings['keywords'] (dictionairy) of additional key value pairs for input file
 
     rmsd_set_info: (list of dicts) [{'folder', 'name', 'ligand_file'}]
         folder: (string)  absolute path to where to store/load the individual docking results
         name: (string) name of docking run to use for files
         ligand_file: (string) absolute path to ligand file
     """
-    def run_docking_set(self, docking_set_info, run_config, incomplete_only=True, log_missing_only=True):
+    def run_docking_set(self, docking_set_info, run_config, incomplete_only=False, log_missing_only=False):
         '''
         Setup and start running a set of docking task
+        See definition of docking_set_info, run_config above
+        incomplete_only (boolean) : whether to only run docking job if docking files are missing
+        log_missing_only (boolean) : whether to only run docking job if log files are missing
         :return: (None)
         '''
         all_docking = []
-        now = datetime.utcnow()
+        #now = datetime.utcnow()
 
         for docking_info in docking_set_info:
             Docking_Run = Docking(docking_info['folder'], docking_info['name'])
 
-            result = Docking_Run.check_done_dock() and ((now - Docking_Run.dock_date()) < timedelta(2))
-            if not (incomplete_only and result):
+            #and ((now - Docking_Run.dock_date()) < timedelta(2))
+            if (not incomplete_only or not Docking_Run.check_done_dock()):
 
-                result = Docking_Run.check_dock_log() and ((now - Docking_Run.dock_log_date()) < timedelta(2))
-                if not (log_missing_only and result):
+                #and ((now - Docking_Run.dock_log_date()) < timedelta(2))
+                if (not log_missing_only or not Docking_Run.check_dock_log()):
                     Docking_Run.write_glide_input_file(docking_info['grid_file'],docking_info['prepped_ligand_file'],docking_info['glide_settings'])
                     all_docking.append(Docking_Run)
+
         self._process(run_config, all_docking, type='dock')
 
     def check_docking_set_done(self, docking_set_info, after_date=False, datedelta=1):
         '''
         Check whether a set of docking tasks is finished
-        :return: (list of booleans), whether each task in docking_set_info is done
+        :return: (list of booleans, list of booleans), whether each task in docking_set_info is done
+        The first list is whether the docking was successful, the second is whether there is alog file.
+        If the log file is missing, there was probably an input error.
         '''
         done_list = []
         log_list = []
@@ -59,10 +68,10 @@ class Docking_Set:
             Docking_Run = Docking(docking_info['folder'], docking_info['name'])
             if (after_date):
 
-                result = Docking_Run.check_done_dock() and ((now - Docking_Run.dock_date()) < timedelta(datedelta))
+                result = Docking_Run.check_done_dock() #and ((now - Docking_Run.dock_date()) < timedelta(datedelta))
                 done_list.append(result)
 
-                result = Docking_Run.check_dock_log() and ((now - Docking_Run.dock_log_date()) < timedelta(datedelta))
+                result = Docking_Run.check_dock_log() #and ((now - Docking_Run.dock_log_date()) < timedelta(datedelta))
                 log_list.append(result)
 
             else:
@@ -110,6 +119,10 @@ class Docking_Set:
         self._process(run_config, all_docking, type='all')
 
     def get_docking_gscores(self, docking_set_info):
+        '''
+        Get the docking scores for each list of poses for each ligand
+        :return (list of dictionairies that contain lists of ints for gscores and emodels)
+        '''
         scores = {}
         for docking_info in docking_set_info:
             Docking_Run = Docking(docking_info['folder'], docking_info['name'])

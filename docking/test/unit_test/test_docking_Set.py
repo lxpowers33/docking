@@ -16,12 +16,12 @@ class TestDocking_Set(TestCase):
                            'name':'test_docking1',
                            'grid_file':test_directory+'/testfile.zip',
                            'prepped_ligand_file':test_directory+'/testfile.mae',
-                           'glide_settings':{}},
+                           'glide_settings': {'num_poses': 10}},
                           {'folder': test_directory + '/test_docking2',
                            'name': 'test_docking2',
                            'grid_file': test_directory+'/testfile.zip',
                            'prepped_ligand_file': test_directory+'/testfile.mae',
-                           'glide_settings': {}}
+                           'glide_settings': {'num_poses': 10}}
                           ]
 
         run_config = {'run_folder':test_directory+'/run',
@@ -84,13 +84,13 @@ class TestDocking_Set(TestCase):
                            'grid_file':test_directory+'/testfile.zip',
                            'prepped_ligand_file':test_directory+'/testfile.mae',
                            'ligand_file': test_directory + '/testfile.mae',
-                           'glide_settings':{}},
+                           'glide_settings':{'num_poses': 10}},
                           {'folder': test_directory + '/test_docking2',
                            'name': 'test_docking2',
                            'grid_file': test_directory+'/testfile.zip',
                            'prepped_ligand_file': test_directory+'/testfile.mae',
                            'ligand_file': test_directory + '/testfile.mae',
-                           'glide_settings': {}}]
+                           'glide_settings': {'num_poses': 10}}]
 
         run_config = {'run_folder': test_directory + '/run',
                     'group_size': 5,

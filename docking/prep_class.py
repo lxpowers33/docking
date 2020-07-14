@@ -4,8 +4,35 @@ from schrodinger.structure import StructureReader, StructureWriter
 from schrodinger.structutils.transform import get_centroid
 
 class Prep_Protein_Set:
+    """
+       Prep for Proteins
+
+            There might be a few prep situations that we want to account for:
+            A) You have an unprepared protein with bound ligand (e.g. a pdb file)
+                Seperate the protein and ligand into seperate files. The ligand will be used
+                to figure out grid center.
+                Start at Step 1
+                Only do step 2 if you want to align multiple grids
+
+            B) You have only an unprepared protein
+                Start at Step 1, don't provide the ligand file
+                Only do step 2 if you want to align multiple grids
+                Skip step 3
+                At step 4, use option 2 or 3 for providing grid center
+
+            C) You have a prepared protein
+                Skip to Prep Step 4, use option 2 or 3 for providing grid center
+
+       Prep for Ligands
+
+    """
 
     def report(self, prep_set_info):
+        """
+        Print out a report of what steps are complete for which grids
+        :param prep_set_info:
+        :return:
+        """
         print('name', 'merge', 'Wizard', 'align', 'split', 'grid')
         for single_prep_info in prep_set_info:
             single_prep = Protein_Prep(single_prep_info['save_folder'], single_prep_info['name'])
@@ -21,6 +48,8 @@ class Prep_Protein_Set:
         """
         Prep Step 1:
         Combine protein raw structure with ligand from raw structure
+        If you don't provide the ligand structure, it will just prep the protein
+
         Run the prep wizard to add hydrogens to protein etc.
 
         Intermediate files: PDB_id_raw_complex.mae
@@ -39,8 +68,12 @@ class Prep_Protein_Set:
             single_prep = Protein_Prep(single_prep_info['save_folder'], single_prep_info['name'])
 
             if not (incomplete_only and single_prep.done_merge()):
-                single_prep.save_merged_ligand_protein(single_prep_info['raw_protein_file'],  single_prep_info['raw_ligand_file'])
-            
+                if ('raw_ligand_file' in single_prep_info):
+                    single_prep.save_merged_ligand_protein(single_prep_info['raw_protein_file'], single_prep_info['raw_ligand_file'])
+                else:
+                    single_prep.save_merged_ligand_protein(single_prep_info['raw_protein_file'],
+                                                           '')
+
             if not (incomplete_only and single_prep.done_prepwizard()):
                 all_preps.append(single_prep)
                 
@@ -85,9 +118,25 @@ class Prep_Protein_Set:
         """
         Prep Step 4:
         Write the grid using the final protein structure
-        Output grid.zip
+        There are 3 options for providing the center of the grid
+            1) (default) use the ligand extracted in step3, assuming you ran step 3
+            :param prep_set_info: list of dicts
+            [{'save_folder':'absolute_path/save_folder',
+              'name': 'PDB_id'}, ...]
 
-        :param prep_set_info:
+            2) provide the path to a new ligand to use as center of grid, as 'grid_ligand' in info dict
+            :param prep_set_info: list of dicts
+            [{'save_folder':'absolute_path/save_folder',
+              'name': 'PDB_id',
+              'grid_ligand': 'absolute_path/save_folder/file.mae'}, ...]
+
+            3) provide x,y,z coordinates as 'grid_ligand'
+            :param prep_set_info: list of dicts
+            [{'save_folder':'absolute_path/save_folder',
+              'name': 'PDB_id',
+              'grid_ligand': 'absolute_path/save_folder/file.mae'}, ...]
+
+        Output grid.zip
         :param run_config:
         :return:
         """
@@ -95,7 +144,12 @@ class Prep_Protein_Set:
         for single_prep_info in prep_set_info:
             single_prep = Protein_Prep(single_prep_info['save_folder'], single_prep_info['name'])
             if not (incomplete_only and single_prep.done_grid()):
-                single_prep.write_grid_in_file()
+                if 'grid_ligand' in single_prep_info:
+                    single_prep.write_grid_in_file('other_ligand', grid_ligand=single_prep_info['grid_ligand'])
+                elif 'grid_xyz' in single_prep_info:
+                    single_prep.write_grid_in_file('xyz', xyz=single_prep_info['grid_xyz'])
+                else:
+                    single_prep.write_grid_in_file('default')
                 all_preps.append(single_prep)
                 
         self._process(run_config, all_preps, type='step4')
@@ -229,19 +283,21 @@ class Protein_Prep:
         :return:
         """
         prot_st = next(StructureReader(raw_protein_file))
-        lig_st = next(StructureReader(raw_ligand_file))
-        #standardize chain naming
-        for c in lig_st.chain:
-            c.name = 'L'
         alpha = 'ABCDEFGHIJKMNOPQRST'
         alpha_count = 0
         for c in prot_st.chain:
             if c.name.strip() == '': continue
-
             c.name = alpha[alpha_count]
             alpha_count += 1
 
-        merged_st = lig_st.merge(prot_st)
+        if raw_ligand_file != '':
+            lig_st = next(StructureReader(raw_ligand_file))
+            # standardize chain naming
+            for c in lig_st.chain:
+                c.name = 'L'
+            merged_st = lig_st.merge(prot_st)
+        else:
+            merged_st = prot_st
 
         st_wr = StructureWriter(self.path+self.raw_complex)
         st_wr.append(merged_st)
@@ -292,11 +348,17 @@ class Protein_Prep:
     def done_split_prepped(self):
         return os.path.isfile(self.path+self.split_protein) and os.path.isfile(self.folder+'/'+self.split_ligand)
 
-    def write_grid_in_file(self):
-        
-        st_2 = next(StructureReader(self.path+self.split_ligand))
-        c2 = get_centroid(st_2)
-        x,y,z = c2[:3]
+    def write_grid_in_file(self, mode, grid_ligand='', xyz=False):
+        if mode == 'other_ligand':
+            st_2 = next(StructureReader(grid_ligand))
+            c2 = get_centroid(st_2)
+            x, y, z = c2[:3]
+        elif mode == 'xyz':
+            x, y, z = xyz
+        else:
+            st_2 = next(StructureReader(self.path+self.split_ligand))
+            c2 = get_centroid(st_2)
+            x,y,z = c2[:3]
 
         with open(self.path+self.grid_in, 'w') as f:
             f.write('GRID_CENTER {},{},{}\n'.format(x,y,z))
