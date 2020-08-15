@@ -1,0 +1,45 @@
+REPORT OF BEST 3 POSES
+
+The receptor and sorted ligand structures were written to the file
+test_docking1_pv.maegz  for use in the Pose Viewer.
+
+Final rankings based on original docking score
+Rank             Title               Lig#    Score    GScore    Lipo     HBond    Metal   Rewards    vdW     Coul     RotB     Site    Emodel    CvdW    Intern  Conf# Pose#  RMSD 
+==== ============================== ====== ========  ======== ======== ======== ======== ======== ======== ======== ======== ======== ======== ======== ======== ===== ===== ======
+   1 2W1I_pose2                          2    -5.98    -7.07     -2.6     -0.6     -0.0     -1.4    -39.6     -8.2      0.8     -0.1      0.0    -47.8      0.0     1     1    -- 
+   2 2W1I_pose3                          3    -5.39    -6.49     -2.6     -0.2     -0.0     -1.3    -41.5     -6.7      0.8     -0.0      0.0    -48.2      0.0     1     1    -- 
+   3 2W1I_pose1                          1 10001.09 10000.00     -2.9     -0.3     -0.0     -1.6 14374956.0     -6.6      0.8      0.0      0.0 14374949.4      0.0     1     1    -- 
+
+
+ For Standard Precision (SP) and HTVS Glide, GlideScore (GScore) is given by:
+
+ GScore = a * vdW + b * Coul + Lipo + Hbond + Metal + Rewards + RotB + Site,
+
+ where 
+
+    vdW     = van der Waals interaction energy
+    Coul    = Coulomb interaction energy
+    Lipo    = Lipophilic-contact plus phobic-attractive term
+    HBond   = Hydrogen-bonding term
+    Metal   = Metal-binding term (usually a reward)
+    Rewards = Various reward or penalty terms
+    RotB    = Penalty for freezing rotatable bonds
+    Site    = Polar interactions in the active site,
+
+ and the coefficients of vdW and Coul are:
+
+    a = 0.050, b = 0.150 for Glide 5.0
+        (the contribution from the Coulomb term is capped at -4 kcal/mol)
+    a = 0.063, b = 0.120 for Glide 4.5
+        (the contribution from the Coulomb term is capped at -4 kcal/mol)
+    a = 0.080, b = 0.100 for Glide 4.0
+
+
+ (GScore = 10000.0 indicates that a given ligand pose failed one
+ or more criteria for computing GScore.  Depending on which ones
+ it failed, the components of GScore may not be valid either.)
+
+ CvdW = Coul + vdW is the non-bonded interaction energy between
+ the ligand and the receptor.
+ Emodel is a specific combination of GScore, CvdW, and Intern,
+ the estimated conformational energy of the ligand.

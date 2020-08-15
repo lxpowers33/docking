@@ -11,3 +11,7 @@ def isfloat(value):
     return True
   except ValueError:
     return False
+
+def score_no_vdW(pose):
+  b = 0.150
+  return b * pose['Coul'] + pose['Lipo'] + pose['HBond'] + pose['Metal'] + pose['Rewards'] + pose['RotB'] + pose['Site']

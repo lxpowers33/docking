@@ -1,5 +1,6 @@
 import os
 import docking.utilities
+from docking.utilities import score_no_vdW
 from schrodinger.structure import StructureReader, StructureWriter
 from datetime import datetime, timedelta
 
@@ -118,7 +119,7 @@ class Docking_Set:
                 all_docking.append(Docking_Run)
         self._process(run_config, all_docking, type='all')
 
-    def get_docking_gscores(self, docking_set_info):
+    def get_docking_gscores(self, docking_set_info, mode='single'):
         '''
         Get the docking scores for each list of poses for each ligand
         :return (list of dictionairies that contain lists of ints for gscores and emodels)
@@ -127,8 +128,13 @@ class Docking_Set:
         for docking_info in docking_set_info:
             Docking_Run = Docking(docking_info['folder'], docking_info['name'])
             if Docking_Run.check_done_dock():
-                gscores, emodels = Docking_Run.get_gscores_emodels()
-                scores[docking_info['name']] = {'gscores':gscores, 'emodels':emodels}
+                if mode == 'multi':
+                    results, results_by_ligand = Docking_Run.get_gscores_emodels_multi()
+                    scores[docking_info['name']] = results_by_ligand
+                else: 
+                    gscores, emodels = Docking_Run.get_gscores_emodels()
+                    scores[docking_info['name']] = {'gscores':gscores, 'emodels':emodels}
+                   
             else:
                 scores[docking_info['name']] = None
 
@@ -205,6 +211,8 @@ class Docking:
         self.pose_viewer_file_name = '{}_pv.maegz'.format(docking_name)
         self.docklog_file_name = '{}.log'.format(docking_name)
         self.rept_file_name = '{}.rept'.format(docking_name)
+        self.scor_file_name = '{}.scor'.format(docking_name)
+
         self.rmsd_file_name = '{}_rmsd.csv'.format(docking_name)
         self.dock_cmd = '$SCHRODINGER/glide -WAIT {}\n'.format(self.glide_input_file_name)
         self.rmsd_cmd = '$SCHRODINGER/run rmsd.py -use_neutral_scaffold -pv second -c {} {} {}\n'
@@ -213,7 +221,15 @@ class Docking:
         #check glide settings
         #check grid_file and prepped_file exists, otherwise return false + missing file
         with open(self.folder+'/'+self.glide_input_file_name, 'w') as f:
-            f.write(commands.format(grid_file, prepped_file, glide_settings['num_poses']))
+            if 'docking_method' in glide_settings:
+                method = glide_settings['docking_method']
+            else:
+                method = "confgen"
+
+            f.write(commands.format(grid_file, prepped_file, 
+                method, glide_settings['num_poses']))
+
+
             if 'keywords' in glide_settings:
                 for key, value in glide_settings['keywords'].items():
                     f.write('{} {}\n'.format(key, value))
@@ -293,6 +309,52 @@ class Docking:
 
         return gscores, emodels
 
+    def get_gscores_emodels_multi(self):
+        '''
+        Should contain the following keys
+        Rank Title Lig#    Score    GScore    Lipo     HBond    Metal   Rewards    vdW     Coul     RotB     Site    Emodel    CvdW    Intern  Conf# Pose#
+        
+        results is list of poses, each pose is dictionairy with key above
+        results by ligand is dictionairy by Title, values are poses for the ligand
+        '''
+        rept_file = self.folder+'/'+self.scor_file_name
+        
+        gscores, emodels = [], []
+
+        results = []
+        results_by_ligand = {}
+        names = []
+        with open(rept_file) as fp:
+            for line in fp:
+                line = line.strip().split()
+
+                if len(line) < 19: continue
+
+                #find the key line 
+                if line[0] == 'Rank':
+                    for item in line:
+                        names.append(item)
+                    continue
+
+                if not (docking.utilities.isfloat(line[2]) and
+                        docking.utilities.isfloat(line[3])): continue
+
+                pose = {}
+                for index, name  in enumerate(names):
+                    if (docking.utilities.isfloat(line[index])):
+                        pose[name] = float(line[index])
+                    else:
+                        pose[name] = line[index]
+
+                results.append(pose)
+
+                ligname = line[1]
+                if ligname not in results_by_ligand:
+                    results_by_ligand[ligname] = []
+                results_by_ligand[ligname].append(pose)
+
+        return results, results_by_ligand
+
     def load_poses(self, maxposes=10):
         poses = []
         for i, st in enumerate(StructureReader(self.folder+'/'+self.pose_viewer_file_name)):
@@ -305,7 +367,7 @@ class Docking:
 
 commands = '''GRIDFILE   {}
 LIGANDFILE   {}
-DOCKING_METHOD   confgen
+DOCKING_METHOD   {}
 CANONICALIZE   True
 POSES_PER_LIG   {}
 POSTDOCK_NPOSE   200

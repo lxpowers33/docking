@@ -1,6 +1,7 @@
 from unittest import TestCase
 from docking.docking_class import Docking
 from docking.utilities import grouper
+from docking.utilities import score_no_vdW
 import os 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -28,6 +29,15 @@ class TestDocking(TestCase):
         self.assertEqual(gscores[1], -10.13)
         self.assertEqual(emodels[0], -77.3)
         self.assertEqual(emodels[1], -76.6)
+
+    def test_get_gscores_emodels_multi(self):
+        test_docking = Docking(dir_path+'/test_data', 'inplace_scores')
+        results, results_by_ligand = test_docking.get_gscores_emodels_multi()
+        self.assertEqual(results_by_ligand['2W1I_pose2'][0]['GScore'], -7.07)
+        self.assertEqual(results_by_ligand['2W1I_pose1'][0]['GScore'], 10000.00)
+        self.assertEqual(results_by_ligand['2W1I_pose1'][0]['vdW'], 14374956.0)
+        self.assertTrue(score_no_vdW(results_by_ligand['2W1I_pose1'][0]) - 4.89 < 0.0001 ) #floating point issues
+
 
     def test_grouper(self):
         out = grouper(10, [1,2,3,4,5])
